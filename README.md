@@ -2,9 +2,9 @@
 # Assignment 2: Play with a 2x2 Rubik Cube
 by 
 
-**NAME**:
+**NAME**: Rusyaida Nasuha binti Rasnijeery
 
-**Matric ID**
+**Matric ID**: 2019922
 
 ## Objective
 
