@@ -29,7 +29,7 @@ class CubeState {
     [Colors.white, Colors.white, Colors.white, Colors.white], // Bottom
   ];
 
-  // Rotate top face to the left, modify if necessary
+  // Rotate top face to the left
   void rotateTop() {
     // Store the top row of each face
     List<Color> topRowFront = [faces[0][0], faces[0][1]];
@@ -39,18 +39,32 @@ class CubeState {
 
     // Rotate top face
     List<Color> tempTop = [...faces[4]];
-    faces[4] = [tempTop[2], tempTop[3], tempTop[0], tempTop[1]];
+    faces[4] = [tempTop[2], tempTop[0], tempTop[3], tempTop[1]];
 
     // Update adjacent faces
-    faces[0] = [faces[3][2], faces[3][3], ...faces[0].sublist(2)];
-    faces[1] = [faces[0][2], faces[0][3], ...faces[1].sublist(2)];
-    faces[2] = [faces[1][2], faces[1][3], ...faces[2].sublist(2)];
-    faces[3] = [faces[2][2], faces[2][3], ...faces[3].sublist(2)];
+    faces[0] = [topRowLeft[0], topRowLeft[1], faces[0][2], faces[0][3]];
+    faces[1] = [topRowBack[0], topRowBack[1], faces[1][2], faces[1][3]];
+    faces[2] = [topRowFront[0], topRowFront[1], faces[2][2], faces[2][3]];
+    faces[3] = [topRowRight[0], topRowRight[1], faces[3][2], faces[3][3]];
   }
-  
-  // Rotate top face to the left, modify if necessary
+
+  // Rotate bottom face to the left
   void rotateBottom() {
-    //Need to implement your code here
+    // Store the bottom row of each face
+    List<Color> bottomRowFront = [faces[0][2], faces[0][3]];
+    List<Color> bottomRowLeft = [faces[1][2], faces[1][3]];
+    List<Color> bottomRowRight = [faces[2][2], faces[2][3]];
+    List<Color> bottomRowBack = [faces[3][2], faces[3][3]];
+
+    // Rotate bottom face
+    List<Color> tempBottom = [...faces[5]];
+    faces[5] = [tempBottom[2], tempBottom[0], tempBottom[3], tempBottom[1]];
+
+    // Update adjacent faces
+    faces[0] = [faces[0][0], faces[0][1], bottomRowRight[0], bottomRowRight[1]];
+    faces[1] = [faces[1][0], faces[1][1], bottomRowFront[0], bottomRowFront[1]];
+    faces[2] = [faces[2][0], faces[2][1], bottomRowBack[0], bottomRowBack[1]];
+    faces[3] = [faces[3][0], faces[3][1], bottomRowLeft[0], bottomRowLeft[1]];
   }
 }
 
@@ -67,6 +81,12 @@ class _CubeScreenState extends State<CubeScreen> {
   void rotateTop() {
     setState(() {
       cube.rotateTop();
+    });
+  }
+
+  void rotateBottom() {
+    setState(() {
+      cube.rotateBottom();
     });
   }
 
@@ -88,13 +108,6 @@ class _CubeScreenState extends State<CubeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('2x2 Rubik\'s Cube'),
-        // instead of using an icon button here, create atleast 2 buttons to rotate the faces, rotate left face, or rotate right face, or implement all rotations.
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.rotate_left),
-            onPressed: rotateTop,
-          )
-        ],
       ),
       body: Center(
         child: Column(
@@ -144,8 +157,40 @@ class _CubeScreenState extends State<CubeScreen> {
                 ),
               ],
             ),
-            // Bottom face , implement your bottom face
-            // Rear face, implement your rear face
+            // Bottom face
+            Column(
+              children: [
+                const Text('Bottom'),
+                SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: buildFace(cube.faces[5]),
+                ),
+              ],
+            ),
+            // Back face
+            Column(
+              children: [
+                const Text('Back'),
+                SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: buildFace(cube.faces[3]),
+                ),
+              ],
+            ),
+            // Buttons for rotations
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: rotateTop,
+                  child: const Text('Rotate Top'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: rotateBottom,
+                  child: const Text('Rotate Bottom'),
                 ),
               ],
             ),
